@@ -62,7 +62,15 @@ class DB{
         return $row;
     }
     
-    function update($id, $cols)
+    function save($array){
+        if(isset($array['id'])){
+            $this->update($array['id'],$array);
+        }else{
+            $this->insert($array);
+        }
+    }
+
+    protected function update($cols)
     {
         
     
@@ -92,7 +100,7 @@ class DB{
         return $this->pdo->exec($sql);
     }
     
-    function insert($values)
+    protected function insert($values)
     {
         
     
@@ -137,5 +145,5 @@ function dd($array)
 }
 
 $student = new DB('students');
-$rows=$student->all();
+$rows=$student->find(1);
 dd($rows);
