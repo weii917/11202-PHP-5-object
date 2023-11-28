@@ -24,9 +24,7 @@ class DB
             if (is_array($where)) {
 
                 if (!empty($where)) {
-                    foreach ($where as $col => $value) {
-                        $tmp[] = "`$col`='$value'";
-                    }
+                    $tmp = $this->a2s($where);
                     $sql .= " where " . join(" && ", $tmp);
                 }
             } else {
@@ -51,9 +49,7 @@ class DB
             if (is_array($where)) {
 
                 if (!empty($where)) {
-                    foreach ($where as $col => $value) {
-                        $tmp[] = "`$col`='$value'";
-                    }
+                    $tmp = $this->a2s($where);
                     $sql .= " where " . join(" && ", $tmp);
                 }
             } else {
@@ -68,42 +64,40 @@ class DB
             echo "錯誤:沒有指定的資料表名稱";
         }
     }
-    function min($arraykey, $where = '', $other = '')
-    {
+    // function min($arraykey, $where = '', $other = '')
+    // {
 
-        $sql = "select min($arraykey) from `$this->table` ";
+    //     $sql = "select min($arraykey) from `$this->table` ";
 
-        if (isset($this->table) && !empty($this->table)) {
+    //     if (isset($this->table) && !empty($this->table)) {
 
-            if (is_array($where)) {
+    //         if (is_array($where)) {
 
-                if (!empty($where)) {
-                    foreach ($where as $col => $value) {
-                        $tmp[] = "`$col`='$value'";
-                    }
-                    $sql .= " where " . join(" && ", $tmp);
-                }
-            } else {
-                $sql .= " $where";
-            }
+    //             if (!empty($where)) {
+    //                 foreach ($where as $col => $value) {
+    //                     $tmp[] = "`$col`='$value'";
+    //                 }
+    //                 $sql .= " where " . join(" && ", $tmp);
+    //             }
+    //         } else {
+    //             $sql .= " $where";
+    //         }
 
-            $sql .= $other;
-            //echo 'all=>'.$sql;
-            $rows = $this->pdo->query($sql)->fetchColumn();
-            return $rows;
-        } else {
-            echo "錯誤:沒有指定的資料表名稱";
-        }
-    }
+    //         $sql .= $other;
+    //         //echo 'all=>'.$sql;
+    //         $rows = $this->pdo->query($sql)->fetchColumn();
+    //         return $rows;
+    //     } else {
+    //         echo "錯誤:沒有指定的資料表名稱";
+    //     }
+    // }
     function find($id)
     {
 
         $sql = "select * from `$this->table` ";
 
         if (is_array($id)) {
-            foreach ($id as $col => $value) {
-                $tmp[] = "`$col`='$value'";
-            }
+            $tmp = $this->a2s($id);
             $sql .= " where " . join(" && ", $tmp);
         } else if (is_numeric($id)) {
             $sql .= " where `id`='$id'";
@@ -121,9 +115,7 @@ class DB
             $sql = "update `$this->table` set ";
 
             if (!empty($array)) {
-                foreach ($array as $col => $value) {
-                    $tmp[] = "`$col`='$value'";
-                }
+                $tmp = $this->a2s($array);
             } else {
                 echo "錯誤:缺少要編輯的欄位陣列";
             }
@@ -146,9 +138,8 @@ class DB
         $sql = "delete from `$this->table` where ";
 
         if (is_array($id)) {
-            foreach ($id as $col => $value) {
-                $tmp[] = "`$col`='$value'";
-            }
+
+            $tmp = $this->a2s($id);
             $sql .= join(" && ", $tmp);
         } else if (is_numeric($id)) {
             $sql .= " `id`='$id'";
@@ -163,6 +154,14 @@ class DB
     function query($sql)
     {
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    //轉換陣列顯示的方式`$col`='$value'存放在新的$tmp陣列，這個值再用各個語法的方式取用
+    private function a2s($array)
+    {
+        foreach ($array as $col => $value) {
+            $tmp[] = "`$col`='$value'";
+        }
+        return $tmp;
     }
 }
 function dd($array)
