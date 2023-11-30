@@ -64,33 +64,7 @@ class DB
             echo "錯誤:沒有指定的資料表名稱";
         }
     }
-    // function min($arraykey, $where = '', $other = '')
-    // {
 
-    //     $sql = "select min($arraykey) from `$this->table` ";
-
-    //     if (isset($this->table) && !empty($this->table)) {
-
-    //         if (is_array($where)) {
-
-    //             if (!empty($where)) {
-    //                 foreach ($where as $col => $value) {
-    //                     $tmp[] = "`$col`='$value'";
-    //                 }
-    //                 $sql .= " where " . join(" && ", $tmp);
-    //             }
-    //         } else {
-    //             $sql .= " $where";
-    //         }
-
-    //         $sql .= $other;
-    //         //echo 'all=>'.$sql;
-    //         $rows = $this->pdo->query($sql)->fetchColumn();
-    //         return $rows;
-    //     } else {
-    //         echo "錯誤:沒有指定的資料表名稱";
-    //     }
-    // }
     function find($id)
     {
 
@@ -155,7 +129,7 @@ class DB
     {
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
-    //轉換陣列顯示的方式`$col`='$value'存放在新的$tmp陣列，這個值再用各個語法的方式取用
+    //轉換陣列顯示的方式`$col`='$value'存放在新的$tmp陣列，這個值在用各個語法的方式取用
     private function a2s($array)
     {
         foreach ($array as $col => $value) {
@@ -172,5 +146,5 @@ function dd($array)
 }
 
 $student = new DB('student_scores');
-$rows = $student->min('score', "where school_num between '911001' and '911049' ");
+$rows = $student->all();
 dd($rows);
